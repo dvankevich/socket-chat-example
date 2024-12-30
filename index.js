@@ -28,15 +28,26 @@ io.on("connection", (socket) => {
   console.log(time.toISOString(), "a user connected:", ip, userAgent);
 
   socket.on("chat message", (msg) => {
-    console.log(ip, "message: " + msg);
+    //console.log(ip, "message: " + msg);
     io.emit("chat message", ip + " > " + msg);
   });
 
   socket.on("disconnect", () => {
     console.log("user disconnected:", ip);
   });
+
+  // Catch-all listeners
+  socket.onAny((eventName, ...args) => {
+    console.log("onAny:", eventName, " ", args);
+  });
+
+  socket.onAnyOutgoing((eventName, ...args) => {
+    console.log("onAnyOutgoing:", eventName, " ", args);
+  });
 });
 
 server.listen(3000, () => {
   console.log("server running at http://localhost:3000");
 });
+
+console.log("end programm");
